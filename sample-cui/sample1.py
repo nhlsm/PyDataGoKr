@@ -1,11 +1,12 @@
 import pprint
-import data_go_kr as dgk
+import data_go_kr
+from data_go_kr import getNewAddressListAreaCd
 
-SVC_KEY = dgk.test_svc_key()
+SVC_KEY = data_go_kr.test_svc_key() # fix it to your SVC_KEY
 
-rsp = dgk.getNewAddressListAreaCd.req(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
+rsp = getNewAddressListAreaCd.req(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
 
-rsp_dict = dgk.getNewAddressListAreaCd.RspDict.fromRsp(rsp)
+rsp_dict = getNewAddressListAreaCd.RspDict.fromRsp(rsp)
 
 pprint.pprint( rsp_dict['NewAddressListResponse']['cmmMsgHeader'] )
 '''

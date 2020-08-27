@@ -16,17 +16,17 @@ __all__ = [
     'getRTMSDataSvcSHTrade',
     'getTMStdrCrdnt',
 ]
-
-def __bootstrap():
-    # print(__name__)
-    for mod_name in __all__:
-        # print(mod_name)
-        # mod = importlib.import_module(__name__ + '.' + mod_name)
-        # mod = importlib.import_module(mod_name, __name__)
-        # print(mod)
-        importlib.import_module(__name__ + '.' + mod_name)
-
-__bootstrap()
+#
+# def __bootstrap():
+#     print('__bootstrap:', __name__)
+#     for mod_name in __all__:
+#         # print(mod_name)
+#         # mod = importlib.import_module(__name__ + '.' + mod_name)
+#         # mod = importlib.import_module(mod_name, __name__)
+#         # print(mod)
+#         importlib.import_module(__name__ + '.' + mod_name)
+#
+# __bootstrap()
 
 def test_svc_key():
     '''

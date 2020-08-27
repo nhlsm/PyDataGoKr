@@ -10,6 +10,7 @@ import requests
 import xmltodict
 import pandas as pd
 
+import data_go_kr
 from data_go_kr import getMsrstnAcctoRltmMesureDnsty as svc
 
 class Test0(unittest.TestCase):
@@ -26,8 +27,7 @@ class Test0(unittest.TestCase):
         logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL, stream=sys.stdout)
 
         global SVC_KEY
-        with open('../SVC_KEY.txt', 'r') as f:
-            SVC_KEY = f.read()
+        SVC_KEY = data_go_kr.test_svc_key()
 
     def __test_req_daily(self):
         rsp = svc.req(serviceKey=SVC_KEY, stationName='종로구', numOfRows=50, dataTerm='DAILY', ver='1.3')

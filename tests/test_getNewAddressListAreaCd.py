@@ -1,15 +1,8 @@
 import logging
 import sys
-import pprint
-import enum
-import typing
 import unittest
-from collections import OrderedDict
 
-import requests
-import xmltodict
-import pandas as pd
-
+import data_go_kr
 from data_go_kr import getNewAddressListAreaCd as svc
 
 class Test0(unittest.TestCase):
@@ -26,8 +19,7 @@ class Test0(unittest.TestCase):
         logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL, stream=sys.stdout)
 
         global SVC_KEY
-        with open('../SVC_KEY.txt', 'r') as f:
-            SVC_KEY = f.read()
+        SVC_KEY = data_go_kr.test_svc_key()
 
     def test_road_0(self):
         '''
@@ -129,24 +121,24 @@ class Test0(unittest.TestCase):
         # self.assertEqual(len(rsp_dict.itemDataFrame()), 168)
 
     def test_get_df_road_0(self):
-        df = svc.get_df(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
+        hdr, df = svc.get_df(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
         self.assertEqual(len(df), 2)
         # print(df)
 
     def test_get_df_road_1(self):
-        df = svc.get_df(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로')
+        hdr, df = svc.get_df(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로')
         # logging.info('key: %s', len(df))
 
         self.assertEqual(len(df), 0)
 
     def test_get_df_dong(self):
-        df = svc.get_df(serviceKey=SVC_KEY, searchSe='dong', srchwrd='홍문동 111-15')
+        hdr, df = svc.get_df(serviceKey=SVC_KEY, searchSe='dong', srchwrd='홍문동 111-15')
         # logging.info('key: %s', len(df) )
 
         self.assertEqual(len(df), 1)
 
     def test_get_df_post(self):
-        df = svc.get_df(serviceKey=SVC_KEY, searchSe='post', srchwrd='12621')
+        hdr, df = svc.get_df(serviceKey=SVC_KEY, searchSe='post', srchwrd='12621')
         # logging.info('key: %s', len(df) )
 
         self.assertEqual(len(df), 168)

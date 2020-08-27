@@ -55,7 +55,6 @@ def get_df(**kwargs) -> pd.DataFrame:
         kwargs['currentPage'] = currentPage
         rsp = req(**kwargs)
 
-        # rsp_dict = RspDict(xmltodict.parse(rsp.content))
         rsp_dict = RspDict.fromRsp(rsp)
 
         total = rsp_dict.totalCount()
@@ -78,7 +77,7 @@ def get_df(**kwargs) -> pd.DataFrame:
     df = pd.DataFrame(itemDictList)
     # logging.info('%s, %s', len(itemDictList), len(df))
     # logging.info('\n%s', df )
-    return df
+    return rsp_dict.header(), df
 
 ###########################################
 # define rsp
@@ -90,27 +89,12 @@ class RspDict(OrderedDict):
         # return RspDict( xmltodict.parse(rsp.content) )
         return RspDict( xmltodict.parse(rsp.content, force_list='newAddressListAreaCd') )
 
-    def resultCode(self) -> int:
-        try:
-            return int(self['NewAddressListResponse']['cmmMsgHeader']['returnCode'])
-        except Exception as e:
-            return -1
-
-    def resultMsg(self) -> str:
-        try:
-            return self['NewAddressListResponse']['cmmMsgHeader']['errMsg']
-        except Exception as e:
-            return '__UNKNOWN'
-
-    def result(self) -> (int,str):
-        return (self.resultCode(), self.resultMsg())
+    def header(self) -> OrderedDict:
+        return self['NewAddressListResponse']['cmmMsgHeader']
 
     def totalCount(self) -> int:
         try:
             return int(self['NewAddressListResponse']['cmmMsgHeader']['totalCount'])
-            # cnt = self['NewAddressListResponse']['cmmMsgHeader']['totalCount']
-            # logging.info('type(cnt): %s', type(cnt) )
-            # return int(cnt)
         except Exception as e:
             # logging.exception(e)
             return 0

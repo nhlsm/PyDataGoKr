@@ -19,14 +19,32 @@ PyDataGoKr 은 공공데이터 Open API 의 python wrapper 임.
 
 # 2. Usage
 ## 2.1. Simple
-- 결과값만 필요한 경우.
+- get header, DataFrame
+- 다수의 요청이 필요한 경우, 마지막 헤더와 누적된 DataFrame 을 반환한다. ( multi page get )
+
 ```python
-import data_go_kr as dgk
+import pprint
 
-SVC_KEY = dgk.test_svc_key()
+import data_go_kr
+from data_go_kr import getNewAddressListAreaCd
 
-# 새주소 5자리 우편번호 조회서비스
-df = dgk.getNewAddressListAreaCd.get_df(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
+SVC_KEY = data_go_kr.test_svc_key() # fix it to your SVC_KEY
+
+# 새주소 5자리 우편번호 조회서비스. ( 도로명 주소 )
+hdr, df = getNewAddressListAreaCd.get_df(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
+pprint.pprint(hdr)
+'''
+OrderedDict([('requestMsgId', None),
+             ('responseMsgId', None),
+             ('responseTime', '20200827:221446136'),
+             ('successYN', 'Y'),
+             ('returnCode', '00'),
+             ('errMsg', None),
+             ('totalCount', '2'),
+             ('countPerPage', '10'),
+             ('totalPage', '1'),
+             ('currentPage', '1')])
+'''
 print(df)
 
 '''
@@ -35,28 +53,49 @@ print(df)
 1  12621  경기도 여주시 세종로 17-1 (홍문동)   경기도 여주시 홍문동 111-2
 '''
 
-# 보건복지부_코로나19연령별,성별감염_현황 조회 서비스
-param = {
+# 새주소 5자리 우편번호 조회서비스. ( 우편번호 ) - req 가 여러번 발생하고, 반환 hdr 는 마지막 요청의 hdr.
+params = {
     'serviceKey' : SVC_KEY,
-    'startCreateDt' : '20200823',
-    'endCreateDt' : '20200823'
+    'searchSe' : 'post',
+    'srchwrd' : '12621'
 }
-df = dgk.getCovid19GenAgeCaseInfJson.get_df(**param)
-print(df.head())
+hdr, df = getNewAddressListAreaCd.get_df(**params)
+pprint.pprint(hdr)
 '''
-  confCase confCaseRate                 createDt  ...  gubun   seq updateDt
-0      344         1.98  2020-08-23 10:24:13.605  ...    0-9  2840     null
-1     1015         5.83  2020-08-23 10:24:13.605  ...  10-19  2839     null
-2     4010        23.05  2020-08-23 10:24:13.605  ...  20-29  2838     null
-3     2191        12.59  2020-08-23 10:24:13.605  ...  30-39  2837     null
-4     2343        13.47  2020-08-23 10:24:13.605  ...  40-49  2836     null
+OrderedDict([('requestMsgId', None),
+             ('responseMsgId', None),
+             ('responseTime', '20200827:221312584'),
+             ('successYN', 'Y'),
+             ('returnCode', '00'),
+             ('errMsg', None),
+             ('totalCount', '168'),
+             ('countPerPage', '10'),
+             ('totalPage', '17'),
+             ('currentPage', '17')])
+'''
+print(df)
 
-[5 rows x 9 columns]
 '''
+     zipNo                             lnmAdres                  rnAdres
+0    12621                  경기도 여주시 세종로 7 (홍문동)        경기도 여주시 홍문동 105-1
+1    12621                경기도 여주시 세종로 7-7 (홍문동)        경기도 여주시 홍문동 120-7
+2    12621                경기도 여주시 세종로 7-8 (홍문동)       경기도 여주시 홍문동 120-10
+3    12621                  경기도 여주시 세종로 9 (홍문동)        경기도 여주시 홍문동 107-3
+4    12621           경기도 여주시 세종로 11 (홍문동, 여주빌딩)     경기도 여주시 홍문동 110 여주빌딩
+..     ...                                  ...                      ...
+163  12621  경기도 여주시 청심로166번길 20-4 (홍문동, 가로판매대4)  경기도 여주시 홍문동 81-9 가로판매대4
+164  12621  경기도 여주시 청심로166번길 20-5 (홍문동, 가로판매대5)  경기도 여주시 홍문동 81-9 가로판매대5
+165  12621  경기도 여주시 청심로166번길 20-6 (홍문동, 가로판매대6)  경기도 여주시 홍문동 81-9 가로판매대6
+166  12621  경기도 여주시 청심로166번길 20-7 (홍문동, 가로판매대7)  경기도 여주시 홍문동 81-9 가로판매대7
+167  12621  경기도 여주시 청심로166번길 20-8 (홍문동, 가로판매대8)  경기도 여주시 홍문동 81-9 가로판매대8
+
+[168 rows x 3 columns]
+'''
+
 ```
 
 ## 2.2. Complex
-- response 헤더가 필요한 경우.
+- 상세제어가 필요한 경우.
 
 ```python
 import pprint
@@ -82,7 +121,7 @@ OrderedDict([('requestMsgId', None),
              ('currentPage', '1')])
 '''
 
-print( rsp_dict.itemDataFrame().head() )
+print( rsp_dict.itemDataFrame() )
 '''
    zipNo                lnmAdres             rnAdres
 0  12621    경기도 여주시 세종로 17 (홍문동)  경기도 여주시 홍문동 111-15
