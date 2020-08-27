@@ -1,3 +1,10 @@
+# sjbyun
+.idea/
+/SVC_KEY.txt
+/README.html
+*.swp
+#...
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
