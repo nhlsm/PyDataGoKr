@@ -16,6 +16,9 @@ __all__ = [
     'getRTMSDataSvcSHTrade',
     'getTMStdrCrdnt',
 ]
+
+# TODO : refer to pandas/__init__.py
+
 #
 # def __bootstrap():
 #     print('__bootstrap:', __name__)

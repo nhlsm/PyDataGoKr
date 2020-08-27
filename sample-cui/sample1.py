@@ -6,7 +6,7 @@ SVC_KEY = data_go_kr.test_svc_key() # fix it to your SVC_KEY
 
 rsp = getNewAddressListAreaCd.req(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
 
-rsp_dict = getNewAddressListAreaCd.RspDict.fromRsp(rsp)
+rsp_dict = getNewAddressListAreaCd.to_rsp_dict(rsp)
 
 pprint.pprint( rsp_dict['NewAddressListResponse']['cmmMsgHeader'] )
 '''

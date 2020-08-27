@@ -47,7 +47,7 @@ def req(**kwargs) -> requests.models.Response:
     # logging.info('2. %s', pprint.pformat(kwargs))
     return requests.get(SVC_URL, params=kwargs)
 
-def get_df(**kwargs) -> pd.DataFrame:
+def get_df(**kwargs) -> (OrderedDict, pd.DataFrame):
     itemDictList = []
     currentPage = 1
     while (True):
@@ -55,7 +55,7 @@ def get_df(**kwargs) -> pd.DataFrame:
         kwargs['currentPage'] = currentPage
         rsp = req(**kwargs)
 
-        rsp_dict = RspDict.fromRsp(rsp)
+        rsp_dict = to_rsp_dict(rsp)
 
         total = rsp_dict.totalCount()
         chunk = rsp_dict.itemDictList()
@@ -82,13 +82,10 @@ def get_df(**kwargs) -> pd.DataFrame:
 ###########################################
 # define rsp
 ###########################################
+def to_rsp_dict(rsp : requests.models.Response ) -> 'RspDict':
+    return RspDict( xmltodict.parse(rsp.content, force_list='newAddressListAreaCd') )
+
 class RspDict(OrderedDict):
-
-    @staticmethod
-    def fromRsp(rsp : requests.models.Response ) -> 'RspDict':
-        # return RspDict( xmltodict.parse(rsp.content) )
-        return RspDict( xmltodict.parse(rsp.content, force_list='newAddressListAreaCd') )
-
     def header(self) -> OrderedDict:
         return self['NewAddressListResponse']['cmmMsgHeader']
 

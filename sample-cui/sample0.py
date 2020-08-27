@@ -20,8 +20,8 @@ OrderedDict([('requestMsgId', None),
              ('totalPage', '1'),
              ('currentPage', '1')])
 '''
-print(df)
 
+print(df)
 '''
    zipNo                lnmAdres             rnAdres
 0  12621    경기도 여주시 세종로 17 (홍문동)  경기도 여주시 홍문동 111-15

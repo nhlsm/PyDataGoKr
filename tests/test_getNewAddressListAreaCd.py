@@ -52,7 +52,7 @@ class Test0(unittest.TestCase):
         # logging.info('cont: %s', rsp.content)
 
         # rsp_dict = svc.RspDict(xmltodict.parse(rsp.content))
-        rsp_dict = svc.RspDict.fromRsp(rsp)
+        rsp_dict = svc.to_rsp_dict(rsp)
         # logging.info('\n%s', pprint.pformat(rsp_dict))
         # logging.info('result: %s', rsp_dict.result())
 
@@ -71,7 +71,7 @@ class Test0(unittest.TestCase):
         # logging.info('cont: %s', rsp.content)
 
         # rsp_dict = svc.RspDict(xmltodict.parse(rsp.content))
-        rsp_dict = svc.RspDict.fromRsp(rsp)
+        rsp_dict = svc.to_rsp_dict(rsp)
         # logging.info('\n%s', pprint.pformat(rsp_dict))
 
         self.assertEqual(rsp.status_code, 200)
@@ -90,7 +90,7 @@ class Test0(unittest.TestCase):
         # logging.info('cont: %s', rsp.content)
 
         # rsp_dict = svc.RspDict(xmltodict.parse(rsp.content))
-        rsp_dict = svc.RspDict.fromRsp(rsp)
+        rsp_dict = svc.to_rsp_dict(rsp)
         # logging.info('\n%s', pprint.pformat(rsp_dict))
 
         self.assertEqual(rsp.status_code, 200)
@@ -109,7 +109,7 @@ class Test0(unittest.TestCase):
         # logging.info('cont: %s', rsp.content)
 
         # rsp_dict = svc.RspDict(xmltodict.parse(rsp.content))
-        rsp_dict = svc.RspDict.fromRsp(rsp)
+        rsp_dict = svc.to_rsp_dict(rsp)
         # logging.info('\n%s', pprint.pformat(rsp_dict))
 
         self.assertEqual(rsp.status_code, 200)
