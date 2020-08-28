@@ -5,7 +5,7 @@
 - [2. Usage](#2-usage)
     - [2.1. Simple](#21-simple)
     - [2.2. Detail](#22-detail)
-- [3. Support](#3-support)
+- [3. Supported API List](#3-supported-api-list)
 - [4. Installation](#4-installation)
 
 <!-- /TOC -->
@@ -93,10 +93,21 @@ OrderedDict([('requestMsgId', None),
 '''
 ```
 
-# 3. Support
+# 3. Supported API List
 
 ```bash
-TODO
+   cat                             name                           flag  desc                          
+0   retrieveNewAdressAreaCdService  getNewAddressListAreaCd        o     새주소 5자리 우편번호 조회서비스           
+1   RTMSOBJSvc                      getRTMSDataSvcAptTrade         o     아파트매매 실거래자료                  
+2   RTMSOBJSvc                      getRTMSDataSvcRHTrade          o     연립다세대 매매 실거래자료               
+3   RTMSOBJSvc                      getRTMSDataSvcSHTrade          o     단독/다가구 매매 실거래 자료             
+4   Covid19                         getCovid19GenAgeCaseInfJson    o     보건복지부_코로나19연령별,성별감염_현황 조회 서비스
+5   Covid19                         getCovid19InfStateJson         o     보건복지부_코로나19감염현황 조회 서비스       
+6   Covid19                         getCovid19SidoInfStateJson     o     보건복지부_코로나19시,도발생_현황 조회 서비스   
+7   ArpltnInforInqireSvc            getMsrstnAcctoRltmMesureDnsty  TODO  측정소별 실시간 측정정보 조회             
+8   MsrstnInfoInqireSvc             getMsrstnList                  TODO  측정소 목록 조회                    
+9   MsrstnInfoInqireSvc             getNearbyMsrstnList            TODO  측정소정보 조회 서비스                 
+10  MsrstnInfoInqireSvc             getTMStdrCrdnt                 TODO  TM 기준좌표 조회    
 ```
 
 # 4. Installation

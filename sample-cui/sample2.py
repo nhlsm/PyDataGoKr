@@ -41,6 +41,13 @@ df = pd.DataFrame( {
 
 # df = df.sort_values(by=['cat', 'name'] )
 # df = df.sort_values(by=['url', 'name'] )
-# print(df[['cat', 'name']])
-print(df)
+# df.style.set_properties(**{'text-align': 'left'})
+# df.style.set_properties(**{'text-align': 'left'}).set_table_styles([ dict(selector='th', props=[('text-align', 'left')] ) ])
+pd.set_option('display.colheader_justify', 'left')
+pd.set_option('display.max_columns', 100)
+pd.set_option('display.width', 10000)
+pd.set_option('max_colwidth', -1)
+# pd.set_option('display.expand_frame_repr', False)
+print(df[['cat', 'name', 'flag', 'desc' ]])
+# print(df)
 
