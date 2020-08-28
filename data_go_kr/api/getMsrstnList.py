@@ -32,18 +32,47 @@ SVC_PARAMS = [
     Param('tmX', True, 10),
     Param('tmY', True, 1),
     Param('ver', True, '1.0'),
+    Param('numOfRows', False, 10),
+    Param('pageNo', False, 1),
 ]
 
 def get_rsp(**kwargs) -> requests.models.Response:
-    # logging.info('1. %s', pprint.pformat(kwargs) )
     kwargs = Param.merge_args(SVC_PARAMS, **kwargs)
-    # logging.info('2. %s', pprint.pformat(kwargs))
     return requests.get(SVC_URL, params=kwargs)
 
 def get_reply(**kwargs) -> Reply:
-    rsp = get_rsp(**kwargs)
-    rsp_content = RspContent.fromRsp(rsp)
-    return Reply(rsp, rsp_content, rsp_content.itemDataFrame() )
+    itemDictList = []
+    currentPage = 1
+    while (True):
+        kwargs['numOfRows'] = 10
+        kwargs['pageNo'] = currentPage
+        rsp = get_rsp(**kwargs)
+
+        rsp_content = RspContent.fromRsp(rsp)
+
+        total = rsp_content.totalCount()
+        chunk = rsp_content.itemDictList()
+        if len(chunk) <= 0:
+            # logging.warning('unexpected: len(chunk)(%d) <=0', len(chunk))
+            break
+
+        itemDictList += chunk
+        logging.info('page:%d, total: %s/%s', currentPage, len(itemDictList), total)
+
+        if len(itemDictList) == total:
+            break
+        elif len(itemDictList) > total:
+            logging.warning('unexpected: len(itemDictList)(%d) > total', len(itemDictList) )
+            break
+        currentPage += 1
+
+    # logging.info('list\n%s', pprint.pformat(addressList) )
+    df = pd.DataFrame(itemDictList)
+    # logging.info('%s, %s', len(itemDictList), len(df))
+    # logging.info('\n%s', df )
+    return Reply(rsp, rsp_content, df)
+
+
 
 ###########################################
 # define rsp content
@@ -67,8 +96,17 @@ class RspContent(OrderedDict):
         except Exception as e:
             return '__UNKNOWN'
 
-    def result(self) -> (int,str):
-        return (self.resultCode(), self.resultMsg())
+    def numOfRows(self) -> int:
+        try:
+            return int(self['response']['body']['numOfRows'])
+        except Exception as e:
+            return -1
+
+    def pageNo(self) -> int:
+        try:
+            return int(self['response']['body']['pageNo'])
+        except Exception as e:
+            return -1
 
     def totalCount(self) -> int:
         try:

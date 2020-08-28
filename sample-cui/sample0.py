@@ -1,3 +1,4 @@
+import pprint
 import data_go_kr as dgk
 
 SVC_KEY = dgk.test_svc_key() # fix it to your SVC_KEY

@@ -4,8 +4,7 @@ import sys
 import unittest
 
 import data_go_kr
-from data_go_kr import getMsrstnList as svc
-
+import data_go_kr.api.statisticsList as svc
 
 class Test0(unittest.TestCase):
     """
@@ -23,11 +22,11 @@ class Test0(unittest.TestCase):
         global SVC_KEY
         SVC_KEY = data_go_kr.test_svc_key()
 
-    def test_rsp_525(self):
+    def __test_rsp(self):
         rsp = svc.get_rsp(serviceKey=SVC_KEY, tmX='244148.546388', tmY='412423.75772')
         # logging.info('code: %s', rsp.status_code)
-        # logging.info('hdr : %s', rsp.headers)
-        # logging.info('cont: %s', rsp.content)
+        logging.info('hdr : %s', rsp.headers)
+        logging.info('cont: %s', rsp.content)
         self.assertEqual(rsp.status_code, 200)
 
         rsp_content = svc.RspContent.fromRsp(rsp)
@@ -53,31 +52,31 @@ class Test0(unittest.TestCase):
         # logging.info('len: %s', len(df) )
         # # logging.info('df\n%s', df )
         # logging.info('v1.1: %s', df.columns.values )
-
-    def __test_rsp_525_loop(self):
-        rsp = svc.get_rsp(serviceKey=SVC_KEY, tmX='244148.546388', tmY='412423.75772'
-                          , numOfRows=100
-                          , pageNo=1
-                          )
-        self.assertEqual(rsp.status_code, 200)
-
-        rsp_content = svc.RspContent.fromRsp(rsp)
-        logging.info('numOfRows: %s', rsp_content.numOfRows())
-        logging.info('pageNo: %s', rsp_content.pageNo())
-        logging.info('totalCount: %s', rsp_content.totalCount() )
-
-        logging.info('len(lst): %s', len(rsp_content.itemDictList())  )
-        pass
-
-    def __test_reply_525(self):
-        reply = svc.get_reply(serviceKey=SVC_KEY, tmX='244148.546388', tmY='412423.75772')
-        # logging.info('code: %s', rsp.status_code)
-        # logging.info('hdr : %s', rsp.headers)
-        # logging.info('cont: %s', rsp.content)
-        # self.assertEqual(rsp.status_code, 200)
-
-        df = reply.df()
-        self.assertEqual(len(df), 525)
+    #
+    # def __test_rsp_525_loop(self):
+    #     rsp = svc.get_rsp(serviceKey=SVC_KEY, tmX='244148.546388', tmY='412423.75772'
+    #                       , numOfRows=100
+    #                       , pageNo=1
+    #                       )
+    #     self.assertEqual(rsp.status_code, 200)
+    #
+    #     rsp_content = svc.RspContent.fromRsp(rsp)
+    #     logging.info('numOfRows: %s', rsp_content.numOfRows())
+    #     logging.info('pageNo: %s', rsp_content.pageNo())
+    #     logging.info('totalCount: %s', rsp_content.totalCount() )
+    #
+    #     logging.info('len(lst): %s', len(rsp_content.itemDictList())  )
+    #     pass
+    #
+    # def __test_reply_525(self):
+    #     reply = svc.get_reply(serviceKey=SVC_KEY, tmX='244148.546388', tmY='412423.75772')
+    #     # logging.info('code: %s', rsp.status_code)
+    #     # logging.info('hdr : %s', rsp.headers)
+    #     # logging.info('cont: %s', rsp.content)
+    #     # self.assertEqual(rsp.status_code, 200)
+    #
+    #     df = reply.df()
+    #     self.assertEqual(len(df), 525)
 
 
 

@@ -3,6 +3,7 @@
 /SVC_KEY.txt
 /README.html
 *.swp
+.~lock*
 #...
 
 # Byte-compiled / optimized / DLL files

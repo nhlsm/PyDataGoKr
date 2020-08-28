@@ -15,17 +15,11 @@ from ..core.reply import *
 ###########################################
 # define global
 ###########################################
-SVC_DESC = '측정소정보 조회 서비스'
-SVC_FLAG = 'o'
-SVC_ENDP = 'http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc'
-SVC_URL  = 'http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList'
-'''
-SC-OA-09-01 측정소정보 조회 서비스    MsrstnInfoInqireSvc
-SC-OA-09-02 대기오염정보 조회 서비스   ArpltnInforInqireSvc
-SC-OA-09-03 대기오염통계 서비스  ArpltnStatsSvc
-SC-OA-09-04 오존황사 발생정보조회 서비스 OzYlwsndOccrrncInforInqireSvc
-SC-OA-09-05 미세먼지 경보 정보 조회 서비스   UlfptcaAlarmInqireSvc
-'''
+SVC_DESC = 'KOSIS 통계목록 서비스'
+SVC_FLAG = 'TODO'
+SVC_ENDP = 'http://kosis.kr/openapi/Data/statisticsList.do'
+SVC_URL  = 'http://kosis.kr/openapi/Data/statisticsList.do'
+
 ###########################################
 # define type
 ###########################################
@@ -34,10 +28,11 @@ SC-OA-09-05 미세먼지 경보 정보 조회 서비스   UlfptcaAlarmInqireSvc
 # define req
 ###########################################
 SVC_PARAMS = [
-    Param('serviceKey', True),
-    Param('tmX', True, 10),
-    Param('tmY', True, 1),
-    Param('ver', True, '1.0'),
+    Param('method',       False, 'getList'),
+    Param('serviceKey',   True),
+    Param('vwCd',         True, 'MT_ZTITLE'),
+    Param('parentListId', True, 'A'),
+    Param('format',       True, 'json'),
 ]
 
 def get_rsp(**kwargs) -> requests.models.Response:
@@ -45,9 +40,38 @@ def get_rsp(**kwargs) -> requests.models.Response:
     return requests.get(SVC_URL, params=kwargs)
 
 def get_reply(**kwargs) -> Reply:
-    rsp = get_rsp(**kwargs)
-    rsp_content = RspContent.fromRsp(rsp)
-    return Reply(rsp, rsp_content, rsp_content.itemDataFrame() )
+    itemDictList = []
+    currentPage = 1
+    while (True):
+        kwargs['numOfRows'] = 10
+        kwargs['pageNo'] = currentPage
+        rsp = get_rsp(**kwargs)
+
+        rsp_content = RspContent.fromRsp(rsp)
+
+        total = rsp_content.totalCount()
+        chunk = rsp_content.itemDictList()
+        if len(chunk) <= 0:
+            # logging.warning('unexpected: len(chunk)(%d) <=0', len(chunk))
+            break
+
+        itemDictList += chunk
+        logging.info('page:%d, total: %s/%s', currentPage, len(itemDictList), total)
+
+        if len(itemDictList) == total:
+            break
+        elif len(itemDictList) > total:
+            logging.warning('unexpected: len(itemDictList)(%d) > total', len(itemDictList) )
+            break
+        currentPage += 1
+
+    # logging.info('list\n%s', pprint.pformat(addressList) )
+    df = pd.DataFrame(itemDictList)
+    # logging.info('%s, %s', len(itemDictList), len(df))
+    # logging.info('\n%s', df )
+    return Reply(rsp, rsp_content, df)
+
+
 
 ###########################################
 # define rsp content
@@ -71,8 +95,17 @@ class RspContent(OrderedDict):
         except Exception as e:
             return '__UNKNOWN'
 
-    def result(self) -> (int,str):
-        return (self.resultCode(), self.resultMsg())
+    def numOfRows(self) -> int:
+        try:
+            return int(self['response']['body']['numOfRows'])
+        except Exception as e:
+            return -1
+
+    def pageNo(self) -> int:
+        try:
+            return int(self['response']['body']['pageNo'])
+        except Exception as e:
+            return -1
 
     def totalCount(self) -> int:
         try:

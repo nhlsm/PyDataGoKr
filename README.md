@@ -13,7 +13,7 @@
 
 # 1. PyDataGoKr
 
-PyDataGoKr 은 공공데이터 Open API 의 python wrapper
+공공데이터 Open API python wrapper
 
 # 2. Usage
 ## 2.1. Simple
@@ -104,10 +104,10 @@ OrderedDict([('requestMsgId', None),
 4   Covid19                         getCovid19GenAgeCaseInfJson    o     보건복지부_코로나19연령별,성별감염_현황 조회 서비스
 5   Covid19                         getCovid19InfStateJson         o     보건복지부_코로나19감염현황 조회 서비스       
 6   Covid19                         getCovid19SidoInfStateJson     o     보건복지부_코로나19시,도발생_현황 조회 서비스   
-7   ArpltnInforInqireSvc            getMsrstnAcctoRltmMesureDnsty  TODO  측정소별 실시간 측정정보 조회             
+7   MsrstnInfoInqireSvc             getNearbyMsrstnList            o     측정소정보 조회 서비스                 
 8   MsrstnInfoInqireSvc             getMsrstnList                  TODO  측정소 목록 조회                    
-9   MsrstnInfoInqireSvc             getNearbyMsrstnList            TODO  측정소정보 조회 서비스                 
-10  MsrstnInfoInqireSvc             getTMStdrCrdnt                 TODO  TM 기준좌표 조회    
+9   MsrstnInfoInqireSvc             getTMStdrCrdnt                 TODO  TM 기준좌표 조회                   
+10  ArpltnInforInqireSvc            getMsrstnAcctoRltmMesureDnsty  o     측정소별 실시간 측정정보 조회     
 ```
 
 # 4. Installation
