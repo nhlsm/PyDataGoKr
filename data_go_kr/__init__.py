@@ -1,23 +1,35 @@
 # import sys
-import importlib
+# import importlib
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
+'''
+v0.0.2
+get_rsp, get_reply
 
-__all__ = [
-    'getCovid19GenAgeCaseInfJson',
-    'getCovid19InfStateJson',
-    'getCovid19SidoInfStateJson',
-    'getMsrstnAcctoRltmMesureDnsty',
-    'getMsrstnList',
-    'getNearbyMsrstnList',
-    'getNewAddressListAreaCd',
-    'getRTMSDataSvcAptTrade',
-    'getRTMSDataSvcRHTrade',
-    'getRTMSDataSvcSHTrade',
-    'getTMStdrCrdnt',
-]
+v0.0.1 
+1st
+
+'''
 
 # TODO : refer to pandas/__init__.py
+
+from data_go_kr.api import (
+    # 도로명 주소
+    getNewAddressListAreaCd,
+    # 부동산 실거래
+    getRTMSDataSvcAptTrade,
+    getRTMSDataSvcRHTrade,
+    getRTMSDataSvcSHTrade,
+    # 코로나19
+    getCovid19GenAgeCaseInfJson,
+    getCovid19InfStateJson,
+    getCovid19SidoInfStateJson,
+    # covid
+    getMsrstnAcctoRltmMesureDnsty,
+    getMsrstnList,
+    getNearbyMsrstnList,
+    getTMStdrCrdnt,
+)
 
 #
 # def __bootstrap():

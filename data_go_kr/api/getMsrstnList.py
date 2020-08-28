@@ -9,15 +9,16 @@ import requests
 import xmltodict
 import pandas as pd
 
-from .utils import reqspec
+from ..core.param import *
+from ..core.reply import *
 
 ###########################################
-# define global variable
+# define global
 ###########################################
-SVC_NAME = '아파트매매 실거래자료'
-SVC_FLAG = 'o'
-SVC_ENDP = 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade?_wadl&type=xml'
-SVC_URL  = 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade'
+SVC_DESC = '측정소 목록 조회'
+SVC_FLAG = 'TODO'
+SVC_ENDP = 'http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc'
+SVC_URL  = 'http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getMsrstnList'
 
 ###########################################
 # define type
@@ -26,33 +27,33 @@ SVC_URL  = 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/r
 ###########################################
 # define req
 ###########################################
-REQ_SPECS = [
-    reqspec.Spec('LAWD_CD', True),
-    reqspec.Spec('DEAL_YMD', True),
-    reqspec.Spec('serviceKey', True),
-    # args.ArgSpec('numOfRows', False, 0),  test
+SVC_PARAMS = [
+    Param('serviceKey', True),
+    Param('tmX', True, 10),
+    Param('tmY', True, 1),
+    Param('ver', True, '1.0'),
 ]
 
-def req(**kwargs) -> requests.models.Response:
+def get_rsp(**kwargs) -> requests.models.Response:
     # logging.info('1. %s', pprint.pformat(kwargs) )
-    kwargs = reqspec.merge_and_verify(REQ_SPECS, **kwargs)
+    kwargs = Param.merge_args(SVC_PARAMS, **kwargs)
     # logging.info('2. %s', pprint.pformat(kwargs))
     return requests.get(SVC_URL, params=kwargs)
 
-def get_df(**kwargs) -> pd.DataFrame:
-    rsp = req(**kwargs)
-    rsp_dict = RspDict(xmltodict.parse(rsp.content))
-    return rsp_dict.itemDataFrame()
+def get_reply(**kwargs) -> Reply:
+    rsp = get_rsp(**kwargs)
+    rsp_content = RspContent.fromRsp(rsp)
+    return Reply(rsp, rsp_content, rsp_content.itemDataFrame() )
 
 ###########################################
-# define rsp
+# define rsp content
 ###########################################
-class RspDict(OrderedDict):
+class RspContent(OrderedDict):
 
     @staticmethod
-    def fromRsp(rsp : requests.models.Response ) -> 'RspDict':
-        # return RspDict( xmltodict.parse(rsp.content) )
-        return RspDict( xmltodict.parse(rsp.content, force_list='item') )
+    def fromRsp(rsp : requests.models.Response ) -> 'RspContent':
+        # return RspContent( xmltodict.parse(rsp.content) )
+        return RspContent( xmltodict.parse(rsp.content, force_list='item') )
 
     def resultCode(self) -> int:
         try:
@@ -93,4 +94,9 @@ class RspDict(OrderedDict):
 
     def itemDataFrame(self) -> pd.DataFrame:
         return pd.DataFrame(self.itemDictList())
+
+
+
+
+
 

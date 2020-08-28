@@ -1,64 +1,54 @@
 import logging
-import sys
-import pprint
-import enum
-import typing
-from collections import OrderedDict
 
-import requests
 import xmltodict
-import pandas as pd
 
-from .utils import reqspec
+from ..core.param import *
+from ..core.reply import *
 
 ###########################################
 # define global variable
 ###########################################
-SVC_NAME = '새주소 5자리 우편번호 조회서비스'
+SVC_DESC = '새주소 5자리 우편번호 조회서비스'
 SVC_FLAG = 'o'
 SVC_ENDP = 'http://openapi.epost.go.kr:80/postal/retrieveNewAdressAreaCdService?_wadl&type=xml'
 SVC_URL  = 'http://openapi.epost.go.kr:80/postal/retrieveNewAdressAreaCdService/retrieveNewAdressAreaCdService/getNewAddressListAreaCd'
 # SVC_URL = 'http://---openapi.epost.go.kr:80/postal/retrieveNewAdressAreaCdService/retrieveNewAdressAreaCdService/getNewAddressListAreaCd'
 # SVC_URL = 'http://openapi.epost.go.kr:80/postal/retrieveNewAdressAreaCdService/retrieveNewAdressAreaCdService/getNewAddressListAreaCd---'
 
-
 ###########################################
 # define type
 ###########################################
-class SearchSe(enum.Enum):
-    DONG = 'dong'
-    ROAD = 'road'
-    POST = 'post'
+SE_DONG = 'dong'
+SE_ROAD = 'road'
+SE_POST = 'post'
 
 ###########################################
 # define req
 ###########################################
-REQ_SPECS = [
-    reqspec.Spec('serviceKey', True),
-    reqspec.Spec('searchSe', False, SearchSe.POST.value),
-    reqspec.Spec('srchwrd', True),
-    reqspec.Spec('countPerPage', False, 10),
-    reqspec.Spec('currentPage', False, 1)
+SVC_PARAMS = [
+    Param('serviceKey', True),
+    Param('searchSe', False, SE_POST),
+    Param('srchwrd', True),
+    Param('countPerPage', False, 10),
+    Param('currentPage', False, 1)
 ]
 
-def req(**kwargs) -> requests.models.Response:
-    # logging.info('1. %s', pprint.pformat(kwargs) )
-    kwargs = reqspec.merge_and_verify(REQ_SPECS, **kwargs)
-    # logging.info('2. %s', pprint.pformat(kwargs))
+def get_rsp(**kwargs) -> requests.models.Response:
+    kwargs = Param.merge_args(SVC_PARAMS, **kwargs)
     return requests.get(SVC_URL, params=kwargs)
 
-def get_df(**kwargs) -> (OrderedDict, pd.DataFrame):
+def get_reply(**kwargs) -> Reply:
     itemDictList = []
     currentPage = 1
     while (True):
         kwargs['countPerPage'] = 10
         kwargs['currentPage'] = currentPage
-        rsp = req(**kwargs)
+        rsp = get_rsp(**kwargs)
 
-        rsp_dict = to_rsp_dict(rsp)
+        rsp_content = RspContent.fromRsp(rsp)
 
-        total = rsp_dict.totalCount()
-        chunk = rsp_dict.itemDictList()
+        total = rsp_content.totalCount()
+        chunk = rsp_content.itemDictList()
         if len(chunk) <= 0:
             # logging.warning('unexpected: len(chunk)(%d) <=0', len(chunk))
             break
@@ -77,17 +67,16 @@ def get_df(**kwargs) -> (OrderedDict, pd.DataFrame):
     df = pd.DataFrame(itemDictList)
     # logging.info('%s, %s', len(itemDictList), len(df))
     # logging.info('\n%s', df )
-    return rsp_dict.header(), df
+    return Reply(rsp, rsp_content, df)
+
 
 ###########################################
-# define rsp
+# define rsp content
 ###########################################
-def to_rsp_dict(rsp : requests.models.Response ) -> 'RspDict':
-    return RspDict( xmltodict.parse(rsp.content, force_list='newAddressListAreaCd') )
-
-class RspDict(OrderedDict):
-    def header(self) -> OrderedDict:
-        return self['NewAddressListResponse']['cmmMsgHeader']
+class RspContent(OrderedDict):
+    @staticmethod
+    def fromRsp(rsp : requests.models.Response ) -> 'RspContent':
+        return RspContent( xmltodict.parse(rsp.content, force_list='newAddressListAreaCd') )
 
     def totalCount(self) -> int:
         try:
@@ -113,3 +102,4 @@ class RspDict(OrderedDict):
 
     def itemDataFrame(self) -> pd.DataFrame:
         return pd.DataFrame(self.itemDictList())
+

@@ -1,55 +1,24 @@
-import pprint
+import data_go_kr as dgk
 
-import data_go_kr
-from data_go_kr import getNewAddressListAreaCd
-
-SVC_KEY = data_go_kr.test_svc_key() # fix it to your SVC_KEY
+SVC_KEY = dgk.test_svc_key() # fix it to your SVC_KEY
 
 # 새주소 5자리 우편번호 조회서비스. ( 도로명 주소 )
-hdr, df = getNewAddressListAreaCd.get_df(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
-pprint.pprint(hdr)
-'''
-OrderedDict([('requestMsgId', None),
-             ('responseMsgId', None),
-             ('responseTime', '20200827:221446136'),
-             ('successYN', 'Y'),
-             ('returnCode', '00'),
-             ('errMsg', None),
-             ('totalCount', '2'),
-             ('countPerPage', '10'),
-             ('totalPage', '1'),
-             ('currentPage', '1')])
-'''
-
-print(df)
+reply = dgk.getNewAddressListAreaCd.get_reply(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
+print(reply.df())
 '''
    zipNo                lnmAdres             rnAdres
 0  12621    경기도 여주시 세종로 17 (홍문동)  경기도 여주시 홍문동 111-15
 1  12621  경기도 여주시 세종로 17-1 (홍문동)   경기도 여주시 홍문동 111-2
 '''
 
-# 새주소 5자리 우편번호 조회서비스. ( 우편번호 ) - req 가 여러번 발생하고, hdr 는 마지막 요청의 hdr.
+# 새주소 5자리 우편번호 조회서비스. ( 우편번호 )
 params = {
     'serviceKey' : SVC_KEY,
     'searchSe' : 'post',
     'srchwrd' : '12621'
 }
-hdr, df = getNewAddressListAreaCd.get_df(**params)
-pprint.pprint(hdr)
-'''
-OrderedDict([('requestMsgId', None),
-             ('responseMsgId', None),
-             ('responseTime', '20200827:221312584'),
-             ('successYN', 'Y'),
-             ('returnCode', '00'),
-             ('errMsg', None),
-             ('totalCount', '168'),
-             ('countPerPage', '10'),
-             ('totalPage', '17'),
-             ('currentPage', '17')])
-'''
-
-print(df)
+reply = dgk.getNewAddressListAreaCd.get_reply(**params)
+print(reply.df())
 '''
      zipNo                             lnmAdres                  rnAdres
 0    12621                  경기도 여주시 세종로 7 (홍문동)        경기도 여주시 홍문동 105-1

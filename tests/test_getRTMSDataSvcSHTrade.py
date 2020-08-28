@@ -30,90 +30,85 @@ class Test0(unittest.TestCase):
         global SVC_KEY
         SVC_KEY = data_go_kr.test_svc_key()
 
-    def test_req_44(self):
-        rsp = svc.req(serviceKey=SVC_KEY, LAWD_CD='11110', DEAL_YMD='201512')
+    def test_rsp_44(self):
+        rsp = svc.get_rsp(serviceKey=SVC_KEY, LAWD_CD='11110', DEAL_YMD='201512')
         # logging.info('code: %s', rsp.status_code)
         # logging.info('hdr : %s', rsp.headers)
         # logging.info('cont: %s', rsp.content)
         self.assertEqual(rsp.status_code, 200)
 
-        # rsp_dict = svc.RspDict(xmltodict.parse(rsp.content))
-        rsp_dict = svc.RspDict.fromRsp(rsp)
-        # logging.info('\n%s', pprint.pformat(rsp_dict))
+        rsp_content = svc.RspContent.fromRsp(rsp)
+        # logging.info('\n%s', pprint.pformat(rsp_content))
 
         CNT = 44
-        self.assertEqual(rsp_dict.totalCount(), CNT)
-        self.assertEqual(len(rsp_dict.itemDictList()), CNT)
-        self.assertEqual(len(rsp_dict.itemDataFrame()), CNT)
+        self.assertEqual(rsp_content.totalCount(), CNT)
+        self.assertEqual(len(rsp_content.itemDictList()), CNT)
+        self.assertEqual(len(rsp_content.itemDataFrame()), CNT)
 
-    def test_req_127(self):
-        rsp = svc.req(serviceKey=SVC_KEY, LAWD_CD='50110', DEAL_YMD='201601')
+    def test_rsp_127(self):
+        rsp = svc.get_rsp(serviceKey=SVC_KEY, LAWD_CD='50110', DEAL_YMD='201601')
         # logging.info('code: %s', rsp.status_code)
         # logging.info('hdr : %s', rsp.headers)
         # logging.info('cont: %s', rsp.content)
         self.assertEqual(rsp.status_code, 200)
 
-        # rsp_dict = svc.RspDict(xmltodict.parse(rsp.content))
-        rsp_dict = svc.RspDict.fromRsp(rsp)
-        # logging.info('\n%s', pprint.pformat(rsp_dict))
+        rsp_content = svc.RspContent.fromRsp(rsp)
+        # logging.info('\n%s', pprint.pformat(rsp_content))
 
         CNT = 127
-        self.assertEqual(rsp_dict.totalCount(), CNT)
-        self.assertEqual(len(rsp_dict.itemDictList()), CNT)
-        self.assertEqual(len(rsp_dict.itemDataFrame()), CNT)
-        # logging.info('\n%s', rsp_dict.itemDataFrame() )
+        self.assertEqual(rsp_content.totalCount(), CNT)
+        self.assertEqual(len(rsp_content.itemDictList()), CNT)
+        self.assertEqual(len(rsp_content.itemDataFrame()), CNT)
+        # logging.info('\n%s', rsp_content.itemDataFrame() )
 
 
-    def test_req_0(self):
-        rsp = svc.req(serviceKey=SVC_KEY, LAWD_CD='1111z', DEAL_YMD='201512')
+    def test_rsp_0(self):
+        rsp = svc.get_rsp(serviceKey=SVC_KEY, LAWD_CD='1111z', DEAL_YMD='201512')
         # logging.info('code: %s', rsp.status_code)
         # logging.info('hdr : %s', rsp.headers)
         # logging.info('cont: %s', rsp.content)
         self.assertEqual(rsp.status_code, 200)
 
-        # rsp_dict = svc.RspDict(xmltodict.parse(rsp.content))
-        rsp_dict = svc.RspDict.fromRsp(rsp)
-        # logging.info('\n%s', pprint.pformat(rsp_dict))
+        rsp_content = svc.RspContent.fromRsp(rsp)
+        # logging.info('\n%s', pprint.pformat(rsp_content))
 
         CNT = 0
-        self.assertEqual(rsp_dict.totalCount(), CNT)
-        self.assertEqual(len(rsp_dict.itemDictList()), CNT)
-        self.assertEqual(len(rsp_dict.itemDataFrame()), CNT)
+        self.assertEqual(rsp_content.totalCount(), CNT)
+        self.assertEqual(len(rsp_content.itemDictList()), CNT)
+        self.assertEqual(len(rsp_content.itemDataFrame()), CNT)
 
-    def test_req_1(self):
-        rsp = svc.req(serviceKey=SVC_KEY, LAWD_CD='42790', DEAL_YMD='200601')
+    def test_rsp_1(self):
+        rsp = svc.get_rsp(serviceKey=SVC_KEY, LAWD_CD='42790', DEAL_YMD='200601')
         # logging.info('code: %s', rsp.status_code)
         # logging.info('hdr : %s', rsp.headers)
         # logging.info('cont: %s', rsp.content)
         self.assertEqual(rsp.status_code, 200)
 
-        # rsp_dict = svc.RspDict(xmltodict.parse(rsp.content))
-        rsp_dict = svc.RspDict.fromRsp(rsp)
-        # logging.info('\n%s', pprint.pformat(rsp_dict))
+        rsp_content = svc.RspContent.fromRsp(rsp)
+        # logging.info('\n%s', pprint.pformat(rsp_content))
 
         CNT = 1
-        self.assertEqual(rsp_dict.totalCount(), CNT)
-        self.assertEqual(len(rsp_dict.itemDictList()), CNT)
-        self.assertEqual(len(rsp_dict.itemDataFrame()), CNT)
+        self.assertEqual(rsp_content.totalCount(), CNT)
+        self.assertEqual(len(rsp_content.itemDictList()), CNT)
+        self.assertEqual(len(rsp_content.itemDataFrame()), CNT)
 
-    def test_req_2(self):
-        rsp = svc.req(serviceKey=SVC_KEY, LAWD_CD='42790', DEAL_YMD='201602')
+    def test_rsp_2(self):
+        rsp = svc.get_rsp(serviceKey=SVC_KEY, LAWD_CD='42790', DEAL_YMD='201602')
         # logging.info('code: %s', rsp.status_code)
         # logging.info('hdr : %s', rsp.headers)
         # logging.info('cont: %s', rsp.content)
         self.assertEqual(rsp.status_code, 200)
 
-        # rsp_dict = svc.RspDict(xmltodict.parse(rsp.content))
-        rsp_dict = svc.RspDict.fromRsp(rsp)
-        # logging.info('\n%s', pprint.pformat(rsp_dict))
+        rsp_content = svc.RspContent.fromRsp(rsp)
+        # logging.info('\n%s', pprint.pformat(rsp_content))
 
         CNT = 2
-        self.assertEqual(rsp_dict.totalCount(), CNT)
-        self.assertEqual(len(rsp_dict.itemDictList()), CNT)
-        self.assertEqual(len(rsp_dict.itemDataFrame()), CNT)
+        self.assertEqual(rsp_content.totalCount(), CNT)
+        self.assertEqual(len(rsp_content.itemDictList()), CNT)
+        self.assertEqual(len(rsp_content.itemDataFrame()), CNT)
 
 
-    def _test_req_loop(self):
+    def _test_rsp_loop(self):
         # lawd_df = lawd_05('o')
         # logging.info('key: %s', lawd_df['법정동코드'] )
         # r = pd.date_range(start='20000101', end='20200801', freq='M')
@@ -123,15 +118,14 @@ class Test0(unittest.TestCase):
         # logging.info('key: %s', type(lst) )
         # logging.info('key: %s', lst )
         for yyyymm in lst:
-            # rsp = svc.req(serviceKey=SVC_KEY, LAWD_CD='11110', DEAL_YMD=yyyymm) # 서울 종로구
-            # rsp = svc.req(serviceKey=SVC_KEY, LAWD_CD='28177', DEAL_YMD=yyyymm) # 인천 미추홀
-            # rsp = svc.req(serviceKey=SVC_KEY, LAWD_CD='50110', DEAL_YMD=yyyymm) # 제주 제주시
-            rsp = svc.req(serviceKey=SVC_KEY, LAWD_CD='42790', DEAL_YMD=yyyymm) # 강원도 화천군
+            # rsp = svc.get_rsp(serviceKey=SVC_KEY, LAWD_CD='11110', DEAL_YMD=yyyymm) # 서울 종로구
+            # rsp = svc.get_rsp(serviceKey=SVC_KEY, LAWD_CD='28177', DEAL_YMD=yyyymm) # 인천 미추홀
+            # rsp = svc.get_rsp(serviceKey=SVC_KEY, LAWD_CD='50110', DEAL_YMD=yyyymm) # 제주 제주시
+            rsp = svc.get_rsp(serviceKey=SVC_KEY, LAWD_CD='42790', DEAL_YMD=yyyymm) # 강원도 화천군
             # logging.info('code: %s', rsp.status_code)
             # logging.info('hdr : %s', rsp.headers)
             # logging.info('cont: %s', rsp.content)
             # self.assertEqual(rsp.status_code, 200)
-            # rsp_dict = svc.RspDict(xmltodict.parse(rsp.content))
-            rsp_dict = svc.RspDict.fromRsp(rsp)
-            logging.info('%s: %s', yyyymm, rsp_dict.totalCount() )
+            rsp_content = svc.RspContent.fromRsp(rsp)
+            logging.info('%s: %s', yyyymm, rsp_content.totalCount() )
 

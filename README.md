@@ -4,7 +4,7 @@
 - [1. PyDataGoKr](#1-pydatagokr)
 - [2. Usage](#2-usage)
     - [2.1. Simple](#21-simple)
-    - [2.2. Complex](#22-complex)
+    - [2.2. Detail](#22-detail)
 - [3. Support](#3-support)
 - [4. Installation](#4-installation)
 
@@ -13,68 +13,33 @@
 
 # 1. PyDataGoKr
 
-PyDataGoKr 은 공공데이터 Open API 의 python wrapper 임.
-- 요청은 requests 를 이용함.
-- 응답은 OrderedDict, DataFrame 형태로 반환함.
+PyDataGoKr 은 공공데이터 Open API 의 python wrapper
 
 # 2. Usage
 ## 2.1. Simple
-- get header, DataFrame
-- 다수의 요청이 필요한 경우, 마지막 헤더와 누적된 DataFrame 을 반환한다. ( multi page get )
 
 ```python
-import pprint
+import data_go_kr as dgk
 
-import data_go_kr
-from data_go_kr import getNewAddressListAreaCd
-
-SVC_KEY = data_go_kr.test_svc_key() # fix it to your SVC_KEY
+SVC_KEY = dgk.test_svc_key() # fix it to your SVC_KEY
 
 # 새주소 5자리 우편번호 조회서비스. ( 도로명 주소 )
-hdr, df = getNewAddressListAreaCd.get_df(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
-pprint.pprint(hdr)
-'''
-OrderedDict([('requestMsgId', None),
-             ('responseMsgId', None),
-             ('responseTime', '20200827:221446136'),
-             ('successYN', 'Y'),
-             ('returnCode', '00'),
-             ('errMsg', None),
-             ('totalCount', '2'),
-             ('countPerPage', '10'),
-             ('totalPage', '1'),
-             ('currentPage', '1')])
-'''
-print(df)
-
+reply = dgk.getNewAddressListAreaCd.get_reply(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
+print(reply.df())
 '''
    zipNo                lnmAdres             rnAdres
 0  12621    경기도 여주시 세종로 17 (홍문동)  경기도 여주시 홍문동 111-15
 1  12621  경기도 여주시 세종로 17-1 (홍문동)   경기도 여주시 홍문동 111-2
 '''
 
-# 새주소 5자리 우편번호 조회서비스. ( 우편번호 ) - req 가 여러번 발생하고, 반환 hdr 는 마지막 요청의 hdr.
+# 새주소 5자리 우편번호 조회서비스. ( 우편번호 )
 params = {
     'serviceKey' : SVC_KEY,
     'searchSe' : 'post',
     'srchwrd' : '12621'
 }
-hdr, df = getNewAddressListAreaCd.get_df(**params)
-pprint.pprint(hdr)
-'''
-OrderedDict([('requestMsgId', None),
-             ('responseMsgId', None),
-             ('responseTime', '20200827:221312584'),
-             ('successYN', 'Y'),
-             ('returnCode', '00'),
-             ('errMsg', None),
-             ('totalCount', '168'),
-             ('countPerPage', '10'),
-             ('totalPage', '17'),
-             ('currentPage', '17')])
-'''
-
-print(df)
+reply = dgk.getNewAddressListAreaCd.get_reply(**params)
+print(reply.df())
 '''
      zipNo                             lnmAdres                  rnAdres
 0    12621                  경기도 여주시 세종로 7 (홍문동)        경기도 여주시 홍문동 105-1
@@ -94,25 +59,30 @@ print(df)
 
 ```
 
-## 2.2. Complex
-- 상세제어가 필요한 경우.
+## 2.2. Detail
 
 ```python
 import pprint
-import data_go_kr
-from data_go_kr import getNewAddressListAreaCd
+import data_go_kr as dgk
 
-SVC_KEY = data_go_kr.test_svc_key() # fix it to your SVC_KEY
+SVC_KEY = dgk.test_svc_key() # fix it to your SVC_KEY
 
-rsp = getNewAddressListAreaCd.req(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
+reply = dgk.getNewAddressListAreaCd.get_reply(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
 
-rsp_dict = getNewAddressListAreaCd.to_rsp_dict(rsp)
+rsp = reply.rsp()  # requests.model.Response
+rsp_content = reply.rsp_content() # data_go_kr.api.getNewAddressListAreaCd.RspContent inherit OrderedDict
+df = reply.df() # pandas.core.frame.DataFrame
 
-pprint.pprint( rsp_dict['NewAddressListResponse']['cmmMsgHeader'] )
+print(type(rsp))
+print(type(rsp_content))
+print(type(df))
+
+print('status_code:', rsp.status_code)
+pprint.pprint(rsp_content['NewAddressListResponse']['cmmMsgHeader'])
 '''
 OrderedDict([('requestMsgId', None),
              ('responseMsgId', None),
-             ('responseTime', '20200827:213700307'),
+             ('responseTime', '20200828:161903767'),
              ('successYN', 'Y'),
              ('returnCode', '00'),
              ('errMsg', None),
@@ -120,13 +90,6 @@ OrderedDict([('requestMsgId', None),
              ('countPerPage', '10'),
              ('totalPage', '1'),
              ('currentPage', '1')])
-'''
-
-print( rsp_dict.itemDataFrame().head() )
-'''
-   zipNo                lnmAdres             rnAdres
-0  12621    경기도 여주시 세종로 17 (홍문동)  경기도 여주시 홍문동 111-15
-1  12621  경기도 여주시 세종로 17-1 (홍문동)   경기도 여주시 홍문동 111-2
 '''
 ```
 

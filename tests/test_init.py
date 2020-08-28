@@ -29,19 +29,17 @@ class Test0(unittest.TestCase):
         # for k,v in data_go_kr.__dict__.items():
         #     logging.info('%s, %s, %s', k,v, type(v) )
         #
-        logging.info('key: %s', dgk.getNewAddressListAreaCd.SVC_NAME )
-        pass
         # for mod_name in dgk.__all__:
         #     logging.info('%s', mod_name )
         #     mod = importlib.import_module( 'data_go_kr.' + mod_name)
-        #     logging.info('  %s', mod.SVC_NAME)
+        #     logging.info('  %s', mod.SVC_DESC)
         #     logging.info('  %s', mod.SVC_URL)
         #     logging.info('  %s', mod.SVC_FLAG)
         #     logging.info('  %s', category_from_url(mod.SVC_URL)  )
         #
         # # TODO: 1) sort by url, 2) make df  3) TODO or COMPLETE
-        # logging.info('name: %s', getCovid19GenAgeCaseInfJson.SVC_NAME )
+        # logging.info('name: %s', getCovid19GenAgeCaseInfJson.SVC_DESC )
         # for m in sys.modules:
         #     if 'go' in m:
         #         logging.info('m: %s', m )
-
+        pass

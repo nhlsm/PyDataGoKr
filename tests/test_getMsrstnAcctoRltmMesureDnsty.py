@@ -29,126 +29,126 @@ class Test0(unittest.TestCase):
         global SVC_KEY
         SVC_KEY = data_go_kr.test_svc_key()
 
-    def __test_req_daily(self):
-        rsp = svc.req(serviceKey=SVC_KEY, stationName='종로구', numOfRows=50, dataTerm='DAILY', ver='1.3')
+    def __test_rsp_daily(self):
+        rsp = svc.get_rsp(serviceKey=SVC_KEY, stationName='종로구', numOfRows=50, dataTerm='DAILY', ver='1.3')
         # logging.info('code: %s', rsp.status_code)
         # logging.info('hdr : %s', rsp.headers)
         # logging.info('cont: %s', rsp.content)
         self.assertEqual(rsp.status_code, 200)
 
-        rsp_dict = svc.RspDict.fromRsp(rsp)
-        df = rsp_dict.itemDataFrame()
-        logging.info('totalCount: %s', rsp_dict.totalCount())
-        logging.info('itemDictList: %s', len(rsp_dict.itemDictList()))
+        rsp_content = svc.RspContent.fromRsp(rsp)
+        df = rsp_content.itemDataFrame()
+        logging.info('totalCount: %s', rsp_content.totalCount())
+        logging.info('itemDictList: %s', len(rsp_content.itemDictList()))
         logging.info('itemDataFrame: %s', len(df))
 
-        self.assertGreaterEqual(len(df), rsp_dict.totalCount())
-        # logging.info('\n%s', pprint.pformat(rsp_dict) )
+        self.assertGreaterEqual(len(df), rsp_content.totalCount())
+        # logging.info('\n%s', pprint.pformat(rsp_content) )
         logging.info('\n%s', df)
 
-    # def test_req_month(self):
-    #     rsp = svc.req(serviceKey=SVC_KEY, stationName='종로구', numOfRows=3000, dataTerm='MONTH', ver='1.3')
+    # def test_rsp_month(self):
+    #     rsp = svc.get_rsp(serviceKey=SVC_KEY, stationName='종로구', numOfRows=3000, dataTerm='MONTH', ver='1.3')
     #     # logging.info('code: %s', rsp.status_code)
     #     # logging.info('hdr : %s', rsp.headers)
     #     # logging.info('cont: %s', rsp.content)
     #     self.assertEqual(rsp.status_code, 200)
     #
-    #     rsp_dict = svc.RspDict.fromRsp(rsp)
-    #     df = rsp_dict.itemDataFrame()
-    #     logging.info('totalCount: %s', rsp_dict.totalCount())
-    #     logging.info('itemDictList: %s', len(rsp_dict.itemDictList()))
+    #     rsp_content = svc.RspContent.fromRsp(rsp)
+    #     df = rsp_content.itemDataFrame()
+    #     logging.info('totalCount: %s', rsp_content.totalCount())
+    #     logging.info('itemDictList: %s', len(rsp_content.itemDictList()))
     #     logging.info('itemDataFrame: %s', len(df))
     #
-    #     self.assertGreaterEqual(len(df), rsp_dict.totalCount())
+    #     self.assertGreaterEqual(len(df), rsp_content.totalCount())
     #
-    # def test_req_quarter(self):
-    #     rsp = svc.req(serviceKey=SVC_KEY, stationName='종로구', numOfRows=3000, dataTerm='3MONTH', ver='1.3')
+    # def test_rsp_quarter(self):
+    #     rsp = svc.get_rsp(serviceKey=SVC_KEY, stationName='종로구', numOfRows=3000, dataTerm='3MONTH', ver='1.3')
     #     # logging.info('code: %s', rsp.status_code)
     #     # logging.info('hdr : %s', rsp.headers)
     #     # logging.info('cont: %s', rsp.content)
     #     self.assertEqual(rsp.status_code, 200)
     #
-    #     rsp_dict = svc.RspDict.fromRsp(rsp)
-    #     df = rsp_dict.itemDataFrame()
-    #     logging.info('totalCount: %s', rsp_dict.totalCount() )
-    #     logging.info('itemDictList: %s', len(rsp_dict.itemDictList()) )
+    #     rsp_content = svc.RspContent.fromRsp(rsp)
+    #     df = rsp_content.itemDataFrame()
+    #     logging.info('totalCount: %s', rsp_content.totalCount() )
+    #     logging.info('itemDictList: %s', len(rsp_content.itemDictList()) )
     #     logging.info('itemDataFrame: %s', len(df))
-    #     self.assertGreaterEqual(len(df), rsp_dict.totalCount())
+    #     self.assertGreaterEqual(len(df), rsp_content.totalCount())
 
 
-    # def test_req_0(self):
-    #     rsp = svc.req(serviceKey=SVC_KEY, stationName='종로구', numOfRows=500, dataTerm='MONTH')
+    # def test_rsp_0(self):
+    #     rsp = svc.get_rsp(serviceKey=SVC_KEY, stationName='종로구', numOfRows=500, dataTerm='MONTH')
     #     # logging.info('code: %s', rsp.status_code)
     #     # logging.info('hdr : %s', rsp.headers)
     #     # logging.info('cont: %s', rsp.content)
     #     self.assertEqual(rsp.status_code, 200)
     #
-    #     # rsp_dict = svc.RspDict(xmltodict.parse(rsp.content))
-    #     rsp_dict = svc.RspDict.fromRsp(rsp)
-    #     # logging.info('\n%s', pprint.pformat(rsp_dict))
-    #     # logging.info('resultCode: %s', rsp_dict.resultCode())
-    #     # logging.info('resultMsg: %s', rsp_dict.resultMsg())
-    #     logging.info('result: %s', rsp_dict.result())
-    #     logging.info('totalCount: %s', rsp_dict.totalCount() )
-    #     logging.info('itemDictList: %s', len(rsp_dict.itemDictList()) )
-    #     logging.info('itemDataFrame: %s', len(rsp_dict.itemDataFrame()))
-    #     logging.info('df\n%s', rsp_dict.itemDataFrame() )
+    #     # rsp_content = svc.RspContent(xmltodict.parse(rsp.content))
+    #     rsp_content = svc.RspContent.fromRsp(rsp)
+    #     # logging.info('\n%s', pprint.pformat(rsp_content))
+    #     # logging.info('resultCode: %s', rsp_content.resultCode())
+    #     # logging.info('resultMsg: %s', rsp_content.resultMsg())
+    #     logging.info('result: %s', rsp_content.result())
+    #     logging.info('totalCount: %s', rsp_content.totalCount() )
+    #     logging.info('itemDictList: %s', len(rsp_content.itemDictList()) )
+    #     logging.info('itemDataFrame: %s', len(rsp_content.itemDataFrame()))
+    #     logging.info('df\n%s', rsp_content.itemDataFrame() )
     #
     #     # CNT = 25
-    #     # self.assertEqual(rsp_dict.totalCount(), CNT)
-    #     # self.assertEqual(len(rsp_dict.itemDictList()), CNT)
-    #     # self.assertEqual(len(rsp_dict.itemDataFrame()), CNT)
+    #     # self.assertEqual(rsp_content.totalCount(), CNT)
+    #     # self.assertEqual(len(rsp_content.itemDictList()), CNT)
+    #     # self.assertEqual(len(rsp_content.itemDataFrame()), CNT)
 
-    # def test_req_11(self):
-    #     rsp = svc.req(serviceKey=SVC_KEY, startCreateDt='20200823', endCreateDt='20200823')
+    # def test_rsp_11(self):
+    #     rsp = svc.get_rsp(serviceKey=SVC_KEY, startCreateDt='20200823', endCreateDt='20200823')
     #     # logging.info('code: %s', rsp.status_code)
     #     # logging.info('hdr : %s', rsp.headers)
     #     # logging.info('cont: %s', rsp.content)
     #     self.assertEqual(rsp.status_code, 200)
     #
-    #     # rsp_dict = svc.RspDict(xmltodict.parse(rsp.content))
-    #     rsp_dict = svc.RspDict.fromRsp(rsp)
-    #     # logging.info('\n%s', pprint.pformat(rsp_dict))
-    #     # logging.info('\n%s', rsp_dict.itemDataFrame())
+    #     # rsp_content = svc.RspContent(xmltodict.parse(rsp.content))
+    #     rsp_content = svc.RspContent.fromRsp(rsp)
+    #     # logging.info('\n%s', pprint.pformat(rsp_content))
+    #     # logging.info('\n%s', rsp_content.itemDataFrame())
     #
     #     CNT = 11
-    #     self.assertEqual(rsp_dict.totalCount(), CNT)
-    #     self.assertEqual(len(rsp_dict.itemDictList()), CNT)
-    #     self.assertEqual(len(rsp_dict.itemDataFrame()), CNT)
+    #     self.assertEqual(rsp_content.totalCount(), CNT)
+    #     self.assertEqual(len(rsp_content.itemDictList()), CNT)
+    #     self.assertEqual(len(rsp_content.itemDataFrame()), CNT)
     #
     #
-    # def test_req_110(self):
-    #     rsp = svc.req(serviceKey=SVC_KEY, startCreateDt='20200801', endCreateDt='20200810')
+    # def test_rsp_110(self):
+    #     rsp = svc.get_rsp(serviceKey=SVC_KEY, startCreateDt='20200801', endCreateDt='20200810')
     #     # logging.info('code: %s', rsp.status_code)
     #     # logging.info('hdr : %s', rsp.headers)
     #     # logging.info('cont: %s', rsp.content)
     #     self.assertEqual(rsp.status_code, 200)
     #
-    #     # rsp_dict = svc.RspDict(xmltodict.parse(rsp.content))
-    #     rsp_dict = svc.RspDict.fromRsp(rsp)
-    #     # logging.info('\n%s', pprint.pformat(rsp_dict))
-    #     # logging.info('\n%s', rsp_dict.itemDataFrame() )
+    #     # rsp_content = svc.RspContent(xmltodict.parse(rsp.content))
+    #     rsp_content = svc.RspContent.fromRsp(rsp)
+    #     # logging.info('\n%s', pprint.pformat(rsp_content))
+    #     # logging.info('\n%s', rsp_content.itemDataFrame() )
     #
     #     CNT = 110
-    #     self.assertEqual(rsp_dict.totalCount(), CNT)
-    #     self.assertEqual(len(rsp_dict.itemDictList()), CNT)
-    #     self.assertEqual(len(rsp_dict.itemDataFrame()), CNT)
+    #     self.assertEqual(rsp_content.totalCount(), CNT)
+    #     self.assertEqual(len(rsp_content.itemDictList()), CNT)
+    #     self.assertEqual(len(rsp_content.itemDataFrame()), CNT)
     #
-    # def test_req_220(self):
-    #     rsp = svc.req(serviceKey=SVC_KEY, startCreateDt='20200801', endCreateDt='20200820')
+    # def test_rsp_220(self):
+    #     rsp = svc.get_rsp(serviceKey=SVC_KEY, startCreateDt='20200801', endCreateDt='20200820')
     #     # logging.info('code: %s', rsp.status_code)
     #     # logging.info('hdr : %s', rsp.headers)
     #     # logging.info('cont: %s', rsp.content)
     #     self.assertEqual(rsp.status_code, 200)
     #
-    #     # rsp_dict = svc.RspDict(xmltodict.parse(rsp.content))
-    #     rsp_dict = svc.RspDict.fromRsp(rsp)
-    #     # logging.info('\n%s', pprint.pformat(rsp_dict))
-    #     # logging.info('\n%s', rsp_dict.itemDataFrame() )
+    #     # rsp_content = svc.RspContent(xmltodict.parse(rsp.content))
+    #     rsp_content = svc.RspContent.fromRsp(rsp)
+    #     # logging.info('\n%s', pprint.pformat(rsp_content))
+    #     # logging.info('\n%s', rsp_content.itemDataFrame() )
     #
     #     CNT = 220
-    #     self.assertEqual(rsp_dict.totalCount(), CNT)
-    #     self.assertEqual(len(rsp_dict.itemDictList()), CNT)
-    #     self.assertEqual(len(rsp_dict.itemDataFrame()), CNT)
+    #     self.assertEqual(rsp_content.totalCount(), CNT)
+    #     self.assertEqual(len(rsp_content.itemDictList()), CNT)
+    #     self.assertEqual(len(rsp_content.itemDataFrame()), CNT)
 
 

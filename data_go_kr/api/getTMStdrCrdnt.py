@@ -9,15 +9,16 @@ import requests
 import xmltodict
 import pandas as pd
 
-from .utils import reqspec
+from ..core.param import *
+from ..core.reply import *
 
 ###########################################
 # define global
 ###########################################
-SVC_NAME = '측정소정보 조회 서비스'
+SVC_DESC = 'TM 기준좌표 조회'
 SVC_FLAG = 'TODO'
 SVC_ENDP = 'http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc'
-SVC_URL  = 'http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList'
+SVC_URL  = 'http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getTMStdrCrdnt'
 
 ###########################################
 # define type
@@ -26,33 +27,31 @@ SVC_URL  = 'http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqire
 ###########################################
 # define req
 ###########################################
-REQ_SPECS = [
-    reqspec.Spec('serviceKey', True),
-    reqspec.Spec('tmX', True, 10),
-    reqspec.Spec('tmY', True, 1),
-    reqspec.Spec('ver', True, '1.0'),
+SVC_PARAMS = [
+    Param('serviceKey', True),
+    Param('tmX', True, 10),
+    Param('tmY', True, 1),
+    Param('ver', True, '1.0'),
 ]
 
-def req(**kwargs) -> requests.models.Response:
-    # logging.info('1. %s', pprint.pformat(kwargs) )
-    kwargs = reqspec.merge_and_verify(REQ_SPECS, **kwargs)
-    # logging.info('2. %s', pprint.pformat(kwargs))
+def get_rsp(**kwargs) -> requests.models.Response:
+    kwargs = Param.merge_args(SVC_PARAMS, **kwargs)
     return requests.get(SVC_URL, params=kwargs)
 
-def get_df(**kwargs) -> pd.DataFrame:
-    rsp = req(**kwargs)
-    rsp_dict = RspDict(xmltodict.parse(rsp.content))
-    return rsp_dict.itemDataFrame()
+def get_reply(**kwargs) -> Reply:
+    rsp = get_rsp(**kwargs)
+    rsp_content = RspContent.fromRsp(rsp)
+    return Reply(rsp, rsp_content, rsp_content.itemDataFrame() )
 
 ###########################################
-# define rsp
+# define rsp content
 ###########################################
-class RspDict(OrderedDict):
+class RspContent(OrderedDict):
 
     @staticmethod
-    def fromRsp(rsp : requests.models.Response ) -> 'RspDict':
-        # return RspDict( xmltodict.parse(rsp.content) )
-        return RspDict( xmltodict.parse(rsp.content, force_list='item') )
+    def fromRsp(rsp : requests.models.Response ) -> 'RspContent':
+        # return RspContent( xmltodict.parse(rsp.content) )
+        return RspContent( xmltodict.parse(rsp.content, force_list='item') )
 
     def resultCode(self) -> int:
         try:

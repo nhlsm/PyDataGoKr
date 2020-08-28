@@ -1,18 +1,24 @@
 import pprint
-import data_go_kr
-from data_go_kr import getNewAddressListAreaCd
+import data_go_kr as dgk
 
-SVC_KEY = data_go_kr.test_svc_key() # fix it to your SVC_KEY
+SVC_KEY = dgk.test_svc_key() # fix it to your SVC_KEY
 
-rsp = getNewAddressListAreaCd.req(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
+reply = dgk.getNewAddressListAreaCd.get_reply(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
 
-rsp_dict = getNewAddressListAreaCd.to_rsp_dict(rsp)
+rsp = reply.rsp()  # requests.model.Response
+rsp_content = reply.rsp_content() # data_go_kr.api.getNewAddressListAreaCd.RspContent inherit OrderedDict
+df = reply.df() # pandas.core.frame.DataFrame
 
-pprint.pprint( rsp_dict['NewAddressListResponse']['cmmMsgHeader'] )
+print(type(rsp))
+print(type(rsp_content))
+print(type(df))
+
+print('status_code:', rsp.status_code)
+pprint.pprint(rsp_content['NewAddressListResponse']['cmmMsgHeader'])
 '''
 OrderedDict([('requestMsgId', None),
              ('responseMsgId', None),
-             ('responseTime', '20200827:213700307'),
+             ('responseTime', '20200828:161903767'),
              ('successYN', 'Y'),
              ('returnCode', '00'),
              ('errMsg', None),
@@ -20,11 +26,4 @@ OrderedDict([('requestMsgId', None),
              ('countPerPage', '10'),
              ('totalPage', '1'),
              ('currentPage', '1')])
-'''
-
-print( rsp_dict.itemDataFrame().head() )
-'''
-   zipNo                lnmAdres             rnAdres
-0  12621    경기도 여주시 세종로 17 (홍문동)  경기도 여주시 홍문동 111-15
-1  12621  경기도 여주시 세종로 17-1 (홍문동)   경기도 여주시 홍문동 111-2
 '''
