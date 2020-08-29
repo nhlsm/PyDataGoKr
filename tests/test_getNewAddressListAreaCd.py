@@ -1,3 +1,4 @@
+import pprint
 import logging
 import sys
 import unittest
@@ -32,20 +33,19 @@ class Test0(unittest.TestCase):
         # logging.info('\n%s', pprint.pformat(rsp_content))
         # logging.info('result: %s', rsp_content.result())
 
-        self.assertEqual(rsp.status_code, 200)
-        self.assertEqual(rsp_content['NewAddressListResponse']['cmmMsgHeader']['successYN'], 'Y')
-        self.assertEqual(rsp_content['NewAddressListResponse']['cmmMsgHeader']['totalCount'], '2')
+        self.assertEqual(200, rsp.status_code)
+        self.assertEqual('Y', rsp_content['NewAddressListResponse']['cmmMsgHeader']['successYN'])
 
         CNT = 2
-        self.assertEqual(rsp_content.totalCount(), CNT)
-        self.assertEqual(len(rsp_content.itemDictList()), CNT)
-        self.assertEqual(len(rsp_content.itemDataFrame()), CNT)
+        self.assertEqual(CNT, rsp_content.totalCount())
+        self.assertEqual(CNT, len(rsp_content.itemDictList()))
+        self.assertEqual(CNT, len(rsp_content.itemDataFrame()))
 
         ##################################
         reply = svc.get_reply(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
-        self.assertEqual(reply.rsp().status_code, 200)
-        self.assertEqual( reply.rsp_content().totalCount(), CNT )
-        self.assertEqual( len( reply.df() ), CNT )
+        self.assertEqual( 200, reply.rsp().status_code)
+        self.assertEqual( CNT, reply.rsp_content().totalCount() )
+        self.assertEqual( CNT, len( reply.df() ) )
 
     def test_road_1(self):
         rsp = svc.get_rsp(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로')
@@ -56,14 +56,13 @@ class Test0(unittest.TestCase):
         rsp_content = svc.RspContent.fromRsp(rsp)
         # logging.info('\n%s', pprint.pformat(rsp_content))
 
-        self.assertEqual(rsp.status_code, 200)
-        self.assertEqual(rsp_content['NewAddressListResponse']['cmmMsgHeader']['successYN'], 'Y')
-        self.assertEqual(rsp_content['NewAddressListResponse']['cmmMsgHeader']['totalCount'], None)
+        self.assertEqual(200, rsp.status_code)
+        self.assertEqual('Y', rsp_content['NewAddressListResponse']['cmmMsgHeader']['successYN'])
 
         CNT = 0
-        self.assertEqual(rsp_content.totalCount(), CNT)
-        self.assertEqual(len(rsp_content.itemDictList()), CNT)
-        self.assertEqual(len(rsp_content.itemDataFrame()), CNT)
+        self.assertEqual(CNT, rsp_content.totalCount())
+        self.assertEqual(CNT, len(rsp_content.itemDictList()))
+        self.assertEqual(CNT, len(rsp_content.itemDataFrame()))
 
 
     def test_dong(self):
@@ -76,14 +75,13 @@ class Test0(unittest.TestCase):
         rsp_content = svc.RspContent.fromRsp(rsp)
         # logging.info('\n%s', pprint.pformat(rsp_content))
 
-        self.assertEqual(rsp.status_code, 200)
-        self.assertEqual(rsp_content['NewAddressListResponse']['cmmMsgHeader']['successYN'], 'Y')
-        self.assertEqual(rsp_content['NewAddressListResponse']['cmmMsgHeader']['totalCount'], '1')
+        self.assertEqual(200, rsp.status_code)
+        self.assertEqual('Y', rsp_content['NewAddressListResponse']['cmmMsgHeader']['successYN'])
 
         CNT = 1
-        self.assertEqual(rsp_content.totalCount(), CNT)
-        self.assertEqual(len(rsp_content.itemDictList()), CNT)
-        self.assertEqual(len(rsp_content.itemDataFrame()), CNT)
+        self.assertEqual(CNT, rsp_content.totalCount())
+        self.assertEqual(CNT, len(rsp_content.itemDictList()))
+        self.assertEqual(CNT, len(rsp_content.itemDataFrame()))
 
 
     def test_post(self):
@@ -96,36 +94,35 @@ class Test0(unittest.TestCase):
         rsp_content = svc.RspContent.fromRsp(rsp)
         # logging.info('\n%s', pprint.pformat(rsp_content))
 
-        self.assertEqual(rsp.status_code, 200)
-        self.assertEqual(rsp_content['NewAddressListResponse']['cmmMsgHeader']['successYN'], 'Y')
-        self.assertEqual(rsp_content['NewAddressListResponse']['cmmMsgHeader']['totalCount'], '168')
+        self.assertEqual(200, rsp.status_code)
+        self.assertEqual('Y', rsp_content['NewAddressListResponse']['cmmMsgHeader']['successYN'])
 
         CNT = 168
-        self.assertEqual(rsp_content.totalCount(), CNT)
+        self.assertEqual(CNT, rsp_content.totalCount())
 
         COUNT_PER_PAGE = 20
-        self.assertEqual(len(rsp_content.itemDictList()), COUNT_PER_PAGE)
-        self.assertEqual(len(rsp_content.itemDataFrame()), COUNT_PER_PAGE)
+        self.assertEqual(COUNT_PER_PAGE, len(rsp_content.itemDictList()))
+        self.assertEqual(COUNT_PER_PAGE, len(rsp_content.itemDataFrame()))
 
     def test_get_df_road_0(self):
         reply = svc.get_reply(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로 17')
-        self.assertEqual(len(reply.df()), 2)
+        self.assertEqual(2, len(reply.df()))
         # print(df)
 
     def test_get_df_road_1(self):
         reply = svc.get_reply(serviceKey=SVC_KEY, searchSe='road', srchwrd='세종로')
         # logging.info('key: %s', len(reply.df()))
 
-        self.assertEqual(len(reply.df()), 0)
+        self.assertEqual(0, len(reply.df()))
 
     def test_get_df_dong(self):
         reply = svc.get_reply(serviceKey=SVC_KEY, searchSe='dong', srchwrd='홍문동 111-15')
         # logging.info('key: %s', len(reply.df()) )
 
-        self.assertEqual(len(reply.df()), 1)
+        self.assertEqual(1, len(reply.df()))
 
     def test_get_df_post(self):
         reply = svc.get_reply(serviceKey=SVC_KEY, searchSe='post', srchwrd='12621')
         # logging.info('key: %s', len(reply.df()) )
 
-        self.assertEqual(len(reply.df()), 168)
+        self.assertEqual(168, len(reply.df()))

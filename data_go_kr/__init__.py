@@ -69,7 +69,7 @@ from data_go_kr.api import (
     # getOzAdvsryOccrrncInfo, # 오존주의보 발생정보 조회
     # getYlwsndAdvsryOccrrncInfo, # 황사주의보 발생정보 조회
     # 미세먼지 경보 정보 조회 서비스
-    # getUlfptcaAlarmInfo, # 미세먼지 경보 현황 조회
+    getUlfptcaAlarmInfo, # 미세먼지 경보 현황 조회
 )
 
 #

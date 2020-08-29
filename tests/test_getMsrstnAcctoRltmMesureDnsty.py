@@ -34,7 +34,7 @@ class Test0(unittest.TestCase):
         logging.info('totalCount: %s', rsp_content.totalCount())
         logging.info('itemDictList: %s', len(rsp_content.itemDictList()))
         logging.info('itemDataFrame: %s', len(df))
-        logging.info('\n%s', df)
+        # logging.info('\n%s', df)
         self.assertEqual(len(df), rsp_content.totalCount())
         # logging.info('\n%s', pprint.pformat(rsp_content) )
 

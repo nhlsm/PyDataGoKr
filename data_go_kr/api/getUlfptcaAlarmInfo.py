@@ -1,38 +1,34 @@
-import logging
-import sys
-import pprint
-import enum
-import typing
-from collections import OrderedDict
-
-import requests
 import xmltodict
-import pandas as pd
 
 from ..core.param import *
 from ..core.reply import *
 from ..core.rspcontentbase import *
 
 ###########################################
-# define global variable
+# define global
 ###########################################
-SVC_DESC = '연립다세대 매매 실거래자료'
+SVC_DESC = '미세먼지 경보 현황 정보를 조회하기 위한 서비스'
 SVC_FLAG = 'o'
-SVC_ENDP = 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHTrade?_wadl&type=xml'
-SVC_URL  = 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHTrade'
+SVC_ENDP = 'http://openapi.airkorea.or.kr/openapi/services/rest/UlfptcaAlarmInqireSvc'
+SVC_URL  = 'http://openapi.airkorea.or.kr/openapi/services/rest/UlfptcaAlarmInqireSvc/getUlfptcaAlarmInfo'
 
 ###########################################
 # define type
 ###########################################
+IC_PM10  = 'PM10'
+IC_PM25  = 'PM25'
+IC_ALL   = None
 
 ###########################################
 # define req
 ###########################################
 SVC_PARAMS = [
-    Param('LAWD_CD', True),
-    Param('DEAL_YMD', True),
     Param('serviceKey', True),
-    # args.ArgSpec('numOfRows', False, 0),  test
+    Param('year',       True),
+    Param('itemCode',   False),    # IC_
+    # Param('returnType', False),  # not work
+    Param('numOfRows',  False, 3000),
+    Param('pageNo',     False, 1),
 ]
 
 def get_rsp(**kwargs) -> requests.models.Response:
@@ -51,7 +47,4 @@ class RspContent(RspContentBase):
     @staticmethod
     def fromRsp(rsp : requests.models.Response ) -> 'RspContent':
         return RspContent( xmltodict.parse(rsp.content, force_list='item') )
-
-
-
 

@@ -11,6 +11,7 @@ import pandas as pd
 
 from ..core.param import *
 from ..core.reply import *
+from ..core.rspcontentbase import *
 
 ###########################################
 # define global

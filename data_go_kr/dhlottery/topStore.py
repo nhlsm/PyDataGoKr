@@ -83,26 +83,10 @@ def get_reply(**kwargs) -> Reply:
     # logging.info('\n%s', df )
     return df
 
-class RspContent(OrderedDict):
-    def totalCount(self) -> int:
-        try:
-            return int(self['NewAddressListResponse']['cmmMsgHeader']['totalCount'])
-        except Exception:
-            return 0
-
-    def itemDictList(self) -> typing.List[OrderedDict]:
-        try:
-            lst = self['NewAddressListResponse']['newAddressListAreaCd']
-            # normalize
-            if isinstance(lst, list):
-                return lst
-            else:
-                return [lst]
-        except Exception:
-            return []
-
-    def itemDataFrame(self) -> pd.DataFrame:
-        return pd.DataFrame(self.itemDictList())
+class RspContent(RspContentBase):
+    @staticmethod
+    def fromRsp(rsp : requests.models.Response ) -> 'RspContent':
+        return RspContent( xmltodict.parse(rsp.content, force_list='item') )
 
 
 def test_2():

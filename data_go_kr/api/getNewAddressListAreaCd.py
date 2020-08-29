@@ -4,6 +4,7 @@ import xmltodict
 
 from ..core.param import *
 from ..core.reply import *
+from ..core.rspcontentbase import *
 
 ###########################################
 # define global variable
@@ -73,10 +74,34 @@ def get_reply(**kwargs) -> Reply:
 ###########################################
 # define rsp content
 ###########################################
-class RspContent(OrderedDict):
+class RspContent(RspContentBase):
     @staticmethod
     def fromRsp(rsp : requests.models.Response ) -> 'RspContent':
         return RspContent( xmltodict.parse(rsp.content, force_list='newAddressListAreaCd') )
+
+    # def resultCode(self) -> int:
+    #     try:
+    #         return int(self['response']['header']['resultCode'])
+    #     except Exception as e:
+    #         return -1
+    #
+    # def resultMsg(self) -> str:
+    #     try:
+    #         return self['response']['header']['resultMsg']
+    #     except Exception as e:
+    #         return '__UNKNOWN'
+    #
+    # def numOfRows(self) -> int:
+    #     try:
+    #         return int(self['response']['body']['numOfRows'])
+    #     except Exception as e:
+    #         return -1
+    #
+    # def pageNo(self) -> int:
+    #     try:
+    #         return int(self['response']['body']['pageNo'])
+    #     except Exception as e:
+    #         return -1
 
     def totalCount(self) -> int:
         try:
@@ -99,7 +124,4 @@ class RspContent(OrderedDict):
         except Exception as e:
             # logging.exception(e)
             return []
-
-    def itemDataFrame(self) -> pd.DataFrame:
-        return pd.DataFrame(self.itemDictList())
 
